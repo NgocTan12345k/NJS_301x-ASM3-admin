@@ -29,20 +29,10 @@ const UpdateProduct = () => {
     e.preventDefault();
 
     const updateProduct = () => {
-      // let formBody = [];
-      // for (let property in productDetail) {
-      //   let encodedKey = encodeURIComponent(property);
-      //   let encodedValue = encodeURIComponent(productDetail[property]);
-      //   formBody.push(encodedKey + "=" + encodedValue);
-      // }
-      // formBody = formBody.join("&");
-
       fetch(`http://localhost:3500/api/product/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productDetail),
-        // headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        // body: formBody,
       })
         .then((res) => {
           return res.json();
@@ -152,6 +142,17 @@ const UpdateProduct = () => {
               onChange={(event) => handleOnChange(event)}
             ></textarea>
             <p>{formErrors.long_desc}</p>
+          </div>
+          <div className="formInput">
+            <label>Quantity</label>
+            <input
+              name="quantity"
+              type="number"
+              placeholder="Enter Quantity"
+              value={productDetail.quantity}
+              onChange={handleOnChange}
+            ></input>
+            <p>{formErrors.quantity}</p>
           </div>
 
           <div className="formInput">

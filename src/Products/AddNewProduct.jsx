@@ -2,15 +2,6 @@ import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import "./AddNewProduct.scss";
-// import { useForm } from "react-hook-form";
-// import * as yup from "yup";
-// import { yupResolver } from "@hookform/resolvers/yup";
-
-// const schema = yup.object().shape({
-//   images: yup.mixed().test("required", "Image is required!", (value) => {
-//     return value && value.length;
-//   }),
-// });
 
 const AddNewProduct = () => {
   const initialValue = {
@@ -19,6 +10,7 @@ const AddNewProduct = () => {
     price: "",
     short_desc: "",
     long_desc: "",
+    quantity: 0,
   };
   const [formValues, setFormValues] = useState(initialValue);
   const [formErrors, setFormErrors] = useState({});
@@ -31,6 +23,7 @@ const AddNewProduct = () => {
   formData.append("price", formValues.price);
   formData.append("short_desc", formValues.short_desc);
   formData.append("long_desc", formValues.long_desc);
+  formData.append("quantity", formValues.quantity);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -93,7 +86,9 @@ const AddNewProduct = () => {
     if (!values.long_desc) {
       errors.long_desc = "Long Description is required!";
     }
-
+    if (!values.quantity) {
+      errors.quantity = "Quantity is required!";
+    }
     return errors;
   };
 
@@ -166,6 +161,17 @@ const AddNewProduct = () => {
             ></textarea>
             <p>{formErrors.long_desc}</p>
           </div>
+          <div className="formInput">
+            <label>Quantity</label>
+            <input
+              name="quantity"
+              type="number"
+              placeholder="Enter Quantity"
+              value={formValues.quantity}
+              onChange={handleOnChange}
+            ></input>
+            <p>{formErrors.quantity}</p>
+          </div>
 
           <div className="formInput">
             <label htmlFor="images">Upload image (4 images)</label>
@@ -178,7 +184,6 @@ const AddNewProduct = () => {
               style={{ border: "none" }}
               onChange={(e) => handleOnChangeFile(e.target.files)}
             ></input>
-            {/* <p>{formErrors.images}</p> */}
           </div>
           <div className="formInput">
             <button type="submit">Submit</button>

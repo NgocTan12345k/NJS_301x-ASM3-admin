@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import queryString from "query-string";
-// import ProductAPI from "../API/ProductAPI";
-// import Pagination from "./Component/Pagination";
 import axios from "axios";
 import convertMoney from "../convertMoney";
 import Header from "../Header/Header";
@@ -13,32 +10,11 @@ import { Avatar } from "@mui/material";
 function Products(props) {
   const [products, setProducts] = useState([]);
 
-  // const [pagination, setPagination] = useState({
-  //   page: "1",
-  //   count: "8",
-  //   search: "",
-  //   category: "all",
-  // });
-
   const [search, setSearch] = useState("");
 
   const onChangeText = (e) => {
     const value = e.target.value;
-    // console.log("value-->", value);
-    // console.log("product-->", products);
-    // const searchItem = products.filter((item) => {
-    //   return item.name.toLowerCase().includes(value.toLowerCase());
-    // });
-
-    // console.log("searchItem-->", searchItem);
     setSearch(value);
-
-    // setPagination({
-    //   page: pagination.page,
-    //   count: pagination.count,
-    //   search: value,
-    //   category: pagination.category,
-    // });
   };
   const productColumns = [
     { field: "col1", headerName: "ID", width: 250 },
@@ -51,7 +27,7 @@ function Products(props) {
       renderCell: (params) => <Avatar src={params.row.col4} />,
     },
     { field: "col5", headerName: "Category", width: 100 },
-    // { field: "col6", headerName: "Edit", width: 150 },
+    { field: "col6", headerName: "Quantity", width: 100 },
   ];
 
   const actionColumn = [
@@ -86,8 +62,6 @@ function Products(props) {
     },
   ];
 
-  // console.log("products-->", products);
-
   const productRows =
     products &&
     products.length > 0 &&
@@ -107,53 +81,25 @@ function Products(props) {
           col3: convertMoney(value.price),
           col4: value.img1,
           col5: value.category,
+          col6: value.quantity,
         };
       });
-  // console.log("productRow-->", productRows);
-
-  // //Tổng số trang
-  // const [totalPage, setTotalPage] = useState();
-
-  // //Hàm này dùng để thay đổi state pagination.page
-  // //Nó sẽ truyền xuống Component con và nhận dữ liệu từ Component con truyền lên
-  // const handlerChangePage = (value) => {
-  //   // console.log("Value: ", value);
-
-  //   //Sau đó set lại cái pagination để gọi chạy làm useEffect gọi lại API pagination
-  //   setPagination({
-  //     page: value,
-  //     count: pagination.count,
-  //     search: pagination.search,
-  //     category: pagination.category,
-  //   });
-  // };
-
   //Gọi hàm useEffect tìm tổng số sản phẩm để tính tổng số trang
   //Và nó phụ thuộc và state pagination
   useEffect(() => {
     const getAllProducts = async () => {
-      // const response = await ProductAPI.getAPI()
       const res = await axios.get(
         "http://localhost:3500/api/product/getAllProducts"
       );
-      // console.log("res-->", res);
+
       const data = res && res.data ? res.data : [];
       setProducts(data);
-
-      // //Tính tổng số trang = tổng số sản phẩm / số lượng sản phẩm 1 trang
-      // const totalPage = Math.ceil(
-      //   parseInt(data.length) / parseInt(pagination.count)
-      // );
-      // // console.log("totalPage-->", totalPage);
-
-      // setTotalPage(totalPage);
     };
 
     getAllProducts();
   }, []);
 
   const handleDelete = async (col1) => {
-    // console.log("col1-->", col1);
     try {
       const res = await axios.delete(
         `http://localhost:3500/api/product/delete/${col1}`
@@ -172,27 +118,6 @@ function Products(props) {
       console.log(error);
     }
   };
-
-  // //Gọi hàm Pagination
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const params = {
-  //       page: pagination.page,
-  //       count: pagination.count,
-  //       search: pagination.search,
-  //       category: pagination.category,
-  //     };
-
-  //     const query = queryString.stringify(params);
-
-  //     const newQuery = "?" + query;
-
-  //     const response = await ProductAPI.getPagination(newQuery);
-  //     console.log(response);
-  //   };
-
-  //   fetchData();
-  // }, [pagination]);
 
   return (
     <>
@@ -241,75 +166,7 @@ function Products(props) {
                     placeholder="Enter Search!"
                   />
                   <br />
-                  {/* <div className="table-responsive">
-                    <table className="table table-striped table-bordered no-wrap">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Name</th>
-                          <th>Price</th>
-                          <th>Image</th>
-                          <th>Category</th>
-                          <th>Edit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {products &&
-                          products.length > 0 &&
-                          products
-                            .filter((item) => {
-                              if (search === "") {
-                                return item;
-                              } else {
-                                return item.name
-                                  .toLowerCase()
-                                  .includes(search.toLowerCase());
-                              }
-                            })
-                            .map((value) => (
-                              <tr key={value._id}>
-                                <td>{value._id}</td>
-                                <td>{value.name}</td>
-                                <td>{convertMoney(value.price)} VND</td>
-                                <td>
-                                  <img
-                                    src={value.img1}
-                                    style={{ height: "60px", width: "60px" }}
-                                    alt=""
-                                  />
-                                </td>
-                                <td>{value.category}</td>
-                                <td>
-                                  <a
-                                    style={{
-                                      cursor: "pointer",
-                                      color: "white",
-                                    }}
-                                    className="btn btn-success"
-                                  >
-                                    Update
-                                  </a>
-                                  &nbsp;
-                                  <a
-                                    style={{
-                                      cursor: "pointer",
-                                      color: "white",
-                                    }}
-                                    className="btn btn-danger"
-                                  >
-                                    Delete
-                                  </a>
-                                </td>
-                              </tr>
-                            ))}
-                      </tbody>
-                    </table>
-                    <Pagination
-                      pagination={pagination}
-                      handlerChangePage={handlerChangePage}
-                      totalPage={totalPage}
-                    />
-                  </div> */}
+
                   <div style={{ height: "500px", width: "100%" }}>
                     <DataGrid
                       className="datagrid"
@@ -325,10 +182,6 @@ function Products(props) {
             </div>
           </div>
         </div>
-        {/* <footer className="footer text-center text-muted">
-        All Rights Reserved by Adminmart. Designed and Developed by{" "}
-        <a href="https://www.facebook.com/KimTien.9920/">Tiền Kim</a>.
-      </footer> */}
       </div>
     </>
   );

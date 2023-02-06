@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import UserAPI from "../API/UserAPI";
 import queryString from "query-string";
 import MessengerAPI from "../API/MessengerAPI";
 import "./Chat.css";
@@ -10,12 +9,7 @@ import io from "socket.io-client";
 import axios from "axios";
 const socket = io(
   "http://localhost:3500",
-  // {
-  // withCredentials: true,
-  // extraHeaders: {
-  //   "my-custom-header": "abcd",
-  // },
-  // }
+
   { transports: ["websocket"] }
 );
 
@@ -24,7 +18,7 @@ function Chat(props) {
 
   const id_counselor = "63cebfeb9da5ee68f0215dfe";
 
-  const [id_user, set_id_user] = useState(""); // Đây phải là roomId vì line số 83 + 84
+  const [id_user, set_id_user] = useState("");
 
   const [message, setMessage] = useState([]);
 
@@ -32,44 +26,22 @@ function Chat(props) {
 
   const [textMessage, setTextMessage] = useState("");
 
-  // const [timeUpdate, setTimeUpdate] = useState("");
-
-  // console.log("timeUpdate-->", timeUpdate);
-
   const onChangeText = (e) => {
     setTextMessage(e.target.value);
   };
 
   // Hàm này dùng để hiển thị roomId
   useEffect(() => {
-    // sessionStorage.setItem("name_user", "ADMIN");
-
-    // const fetchData = async () => {
-    //   // const response = await UserAPI.getAllData();
-    //   const res = await axios.get("http://localhost:3500/api/users");
-    //   // console.log("res-->", res);
-    //   const data = res && res.data ? res.data : [];
-    //   // console.log("data-->", data);
-
-    //   const user_another = data.filter((value) => {
-    //     return value._id !== id_admin;
-    //   });
-
-    //   // console.log("user_another-->", user_another);
-
-    //   setAnother(user_another);
-    // }
     const getAllMessenger = async () => {
       const res = await axios.get(
         "http://localhost:3500/api/messenger/getAllMessenger"
       );
-      console.log("res.data-->", res.data);
+
       const data = res && res.data ? res.data : [];
-      console.log("data-->", data);
+
       setAllMessenger(data);
     };
     getAllMessenger();
-    // fetchData();
   }, []);
 
   const AllRoomId = allMessenger.map((item) => {
@@ -82,14 +54,11 @@ function Chat(props) {
     console.log("value-->", value);
     const getId_userByRoomId = async () => {
       const res = await axios.get(`http://localhost:3500/api/users/${value}`);
-      // console.log("res-->", res);
       const data = res && res.data ? res.data : [];
       set_id_user(data);
     };
     getId_userByRoomId();
   };
-
-  // console.log("id_user-->", id_user);
 
   // Hàm này dùng để load dữ liệu message và nó sẽ chạy lại khi state id_user2 thay đổi
   // Tức là khi admin chọn người dùng mà admin muốn chat thì state id_user2 sẽ thay đổi
@@ -105,8 +74,6 @@ function Chat(props) {
 
       const response = await MessengerAPI.getMessage(query);
       console.log("res1-->", response);
-
-      // setTimeUpdate(response.updatedAt);
       setMessage(response.content);
     };
 
@@ -150,17 +117,12 @@ function Chat(props) {
   const handlerSend = () => {
     console.log(textMessage);
 
-    // if (!id_user) {
-    //   return;
-    // }
-
     //Khi gửi tin nhắn thì nó sẽ lấy id của cả 2 người
     //Với cái key category có value là send
     //Vì là gửi tin nhắn
     const data = {
       id_counselor: id_counselor,
       id_user: id_user,
-      // id: Math.random().toString(),
       message: textMessage,
       name: sessionStorage.getItem("name_user"),
       category: "send",
@@ -185,9 +147,6 @@ function Chat(props) {
 
     setTextMessage("");
   };
-
-  // console.log("messenger-->", message);
-  console.log("AllRoomId-->", AllRoomIdUnique);
 
   return (
     <>
@@ -251,16 +210,6 @@ function Chat(props) {
                                   onClick={() => handleRoomIdDetail(value)}
                                   className="message-item d-flex align-items-center border-bottom px-3 py-2 active_user"
                                 >
-                                  {/* <div className="user-img">
-                                    {" "}
-                                    <img
-                                      src="https://img.icons8.com/color/36/000000/administrator-male.png"
-                                      alt="user"
-                                      className="img-fluid rounded-circle"
-                                      width="40px"
-                                    />{" "}
-                                    <span className="profile-status away float-right"></span>
-                                  </div> */}
                                   <div className="w-75 d-inline-block v-middle pl-2">
                                     <h6 className="message-title mb-0 mt-1">
                                       {value}
@@ -268,9 +217,7 @@ function Chat(props) {
                                     <span className="font-12 text-nowrap d-block text-muted text-truncate">
                                       Online
                                     </span>
-                                    <span className="font-12 text-nowrap d-block text-muted">
-                                      {/* {timeUpdate} */}
-                                    </span>
+                                    <span className="font-12 text-nowrap d-block text-muted"></span>
                                   </div>
                                 </a>
                               ))}
@@ -341,12 +288,12 @@ function Chat(props) {
                           </div>
                         </div>
                         <div className="col-3">
-                          <a
+                          <button
                             className="btn-circle btn-lg btn-cyan float-right text-white"
                             onClick={handlerSend}
                           >
                             <i className="fas fa-paper-plane"></i>
-                          </a>
+                          </button>
                         </div>
                       </div>
                     </div>

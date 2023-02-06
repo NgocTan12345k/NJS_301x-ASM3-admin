@@ -15265,6 +15265,7 @@ ul.list-style-none li a:hover {
 .chat-list .chat-item .chat-content .msg {
   background-color: #e4fbf8;
   font-size: 14px;
+  float: left;
 }
 .chat-list .chat-item .chat-time {
   margin-left: 65px;
@@ -15274,6 +15275,7 @@ ul.list-style-none li a:hover {
 }
 .chat-list .chat-item.odd .chat-content .msg {
   background-color: #eef5ff;
+  float: right;
 }
 .chat-list .chat-item.odd .box {
   clear: both;

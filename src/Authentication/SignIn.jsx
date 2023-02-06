@@ -1,23 +1,11 @@
 import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
-// import UserAPI from '../API/UserAPI';
-// import { addSession } from "../Redux/Action/ActionSession";
 import "./Auth.css";
-// import queryString from "query-string";
-// import CartAPI from "../API/CartAPI";
-// import axios from "axios";
-// import MessengerAPI from "../API/MessengerAPI";
 
 function SignIn(props) {
-  //listCart được lấy từ redux
-  // const listCart = useSelector((state) => state.Cart.listCart);
-
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
-
-  // const [user, setUser] = useState([]);
 
   const [errorEmail, setErrorEmail] = useState(false);
   const [emailRegex, setEmailRegex] = useState(false);
@@ -25,24 +13,6 @@ function SignIn(props) {
   const [errorAuthorized, setErrorAuthorized] = useState(false);
 
   const [redirect, setRedirect] = useState(false);
-
-  // const [checkPush, setCheckPush] = useState(false);
-
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3500/api/auth/login")
-  //     .then((resuilt) => {
-  //       if (resuilt) {
-  //         console.log("resuilt-->", resuilt);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-  // axios.defaults.withCredentials = true;
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -53,27 +23,6 @@ function SignIn(props) {
   };
 
   const onSubmit = () => {
-    // const Signin = () => {
-    //   fetch("http://localhost:3500/api/auth/login", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     credentials: "same-origin",
-    //     body: JSON.stringify({
-    //       email: email,
-    //       password: password,
-    //     }),
-    //   })
-    //     .then((res) => {
-    //       return res.json();
-    //     })
-    //     .then((data) => {
-    //       console.log("data-->", data);
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
-    // };
-    // Signin();
     if (!email) {
       setErrorEmail(true);
       return;
@@ -101,7 +50,6 @@ function SignIn(props) {
               }),
             })
               .then((res) => {
-                // console.log("res-->", res.clone().json());
                 return res.clone().json();
               })
               .then((data) => {
@@ -116,26 +64,6 @@ function SignIn(props) {
                     localStorage.setItem("role", data.user.role);
                     setRedirect(true);
                   }
-
-                  // const action = addSession(localStorage.getItem("id_user"));
-                  // dispatch(action);
-                  // setCheckPush(true);
-
-                  // Hàm này dùng để tạo các conversation cho user và admin
-                  // const postConversation = async () => {
-                  //   console.log("email-->", email);
-                  //   const params = {
-                  //     email: email,
-                  //     //   password: password,
-                  //   };
-
-                  //   const query = "?" + queryString.stringify(params);
-
-                  //   const response = await MessengerAPI.postConversation(query);
-                  //   console.log("response-->", response);
-                  // };
-
-                  // postConversation();
                 } else if (data.message === "Wrong email") {
                   setErrorEmail(true);
                   return;
@@ -150,87 +78,10 @@ function SignIn(props) {
               });
           };
           Signin();
-
-          //     localStorage.setItem("id_user", findUser._id);
-
-          //     localStorage.setItem("name_user", findUser.fullname);
-
-          //     const action = addSession(localStorage.getItem("id_user"));
-          //     dispatch(action);
-
-          //     setCheckPush(true);
-          // const findUser = user.find((value) => {
-          //   console.log("value-->", value);
-          //   return value.email === email;
-          // });
-
-          // console.log("finduser-->", findUser);
-
-          // if (!findUser) {
-          //   setErrorEmail(true);
-          //   return;
-          // } else {
-          //   setErrorEmail(false);
-
-          //   if (findUser.password !== password) {
-          //     setErrorPassword(true);
-          //     return;
-          //   } else {
-          //     setErrorPassword(false);
-
-          //     localStorage.setItem("id_user", findUser._id);
-
-          //     localStorage.setItem("name_user", findUser.fullname);
-
-          //     const action = addSession(localStorage.getItem("id_user"));
-          //     dispatch(action);
-
-          //     setCheckPush(true);
-          //   }
-          // }
         }
       }
     }
   };
-
-  //Hàm này dùng để đưa hết tất cả carts vào API của user
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     //Lần đầu sẽ không thực hiện insert được vì addCart = ''
-  //     if (checkPush === true) {
-  //       for (let i = 0; i < listCart.length; i++) {
-  //         //Nó sẽ lấy idUser và idProduct và count cần thêm để gửi lên server
-  //         const params = {
-  //           idUser: localStorage.getItem("id_user"),
-  //           idProduct: listCart[i].idProduct,
-  //           count: listCart[i].count,
-  //         };
-
-  //         const query = "?" + queryString.stringify(params);
-
-  //         // const response = await CartAPI.postAddToCart(query);
-  //         // console.log(response);
-  //       }
-
-  //       setRedirect(true);
-  //     }
-  //   };
-
-  //   // const getSessionLogin = async () => {
-  //   //   const res = await axios.get("http://localhost:3500/api/auth/login");
-  //   //   console.log("res-->", res);
-  //   // };
-  //   // getSessionLogin();
-  //   axios
-  //     .get("http://localhost:3500/api/auth/login")
-  //     .then((resuilt) => {
-  //       console.log("resuilt-->", resuilt);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   fetchData();
-  // }, [checkPush, listCart]);
 
   function validateEmail(email) {
     const re =
