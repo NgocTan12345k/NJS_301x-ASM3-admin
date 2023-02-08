@@ -8,7 +8,7 @@ import UserAPI from "../API/UserAPI";
 
 import io from "socket.io-client";
 const socket = io(
-  "http://localhost:3500",
+  "https://ecommerce-app-server.onrender.com",
 
   { transports: ["websocket"] }
 );
