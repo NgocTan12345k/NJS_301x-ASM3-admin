@@ -1,22 +1,15 @@
-import axiosClient from './axiosClient'
+import axiosClient from "./axiosClient";
 
 const UserAPI = {
+  getIdUserByRoomId: (value) => {
+    const url = `/users/${value}`;
+    return axiosClient.get(url);
+  },
 
-    getAllData: () => {
-        const url = '/users'
-        return axiosClient.get(url)
-    },
+  getAllUser: () => {
+    const url = "/users";
+    return axiosClient.get(url);
+  },
+};
 
-    getDetailData: (id) => {
-        const url = `/users/${id}`
-        return axiosClient.get(url)
-    },
-
-    postSignUp: (query) => {
-        const url = `/users/signup/${query}`
-        return axiosClient.post(url)
-    }
-
-}
-
-export default UserAPI
+export default UserAPI;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ProductAPI from "../API/ProductAPI";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import "./AddNewProduct.scss";
@@ -41,21 +42,27 @@ const AddNewProduct = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const postAddProduct = () => {
-      fetch("http://localhost:3500/api/product/postAddProduct", {
-        method: "POST",
+    const postAddProduct = async () => {
+      try {
+        const response = await ProductAPI.postAddProduct(formData);
+        console.log("res-->", response);
+      } catch (error) {
+        console.log(error);
+      }
+      // fetch("http://localhost:3500/api/product/postAddProduct", {
+      //   method: "POST",
 
-        body: formData,
-      })
-        .then((res) => {
-          return res.clone().json();
-        })
-        .then((data) => {
-          console.log("data-->", data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      //   body: formData,
+      // })
+      //   .then((res) => {
+      //     return res.clone().json();
+      //   })
+      //   .then((data) => {
+      //     console.log("data-->", data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     };
     postAddProduct();
     setFormErrors(validate(formValues));

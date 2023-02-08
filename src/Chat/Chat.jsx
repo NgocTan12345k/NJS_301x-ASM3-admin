@@ -4,9 +4,9 @@ import MessengerAPI from "../API/MessengerAPI";
 import "./Chat.css";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
+import UserAPI from "../API/UserAPI";
 
 import io from "socket.io-client";
-import axios from "axios";
 const socket = io(
   "http://localhost:3500",
 
@@ -33,13 +33,19 @@ function Chat(props) {
   // Hàm này dùng để hiển thị roomId
   useEffect(() => {
     const getAllMessenger = async () => {
-      const res = await axios.get(
-        "http://localhost:3500/api/messenger/getAllMessenger"
-      );
+      try {
+        const response = await MessengerAPI.getAllMessage();
+        setAllMessenger(response);
+      } catch (error) {
+        console.log(error);
+      }
+      // const res = await axios.get(
+      //   "http://localhost:3500/api/messenger/getAllMessenger"
+      // );
 
-      const data = res && res.data ? res.data : [];
+      // const data = res && res.data ? res.data : [];
 
-      setAllMessenger(data);
+      // setAllMessenger(data);
     };
     getAllMessenger();
   }, []);
@@ -51,11 +57,17 @@ function Chat(props) {
 
   // Hàm này dùng để lấy id_user
   const handleRoomIdDetail = (value) => {
-    console.log("value-->", value);
     const getId_userByRoomId = async () => {
-      const res = await axios.get(`http://localhost:3500/api/users/${value}`);
-      const data = res && res.data ? res.data : [];
-      set_id_user(data);
+      try {
+        const response = await UserAPI.getIdUserByRoomId(value);
+        console.log("res-->", response);
+        set_id_user(response);
+      } catch (error) {
+        console.log(error);
+      }
+      // const res = await axios.get(`http://localhost:3500/api/users/${value}`);
+      // const data = res && res.data ? res.data : [];
+      // set_id_user(data);
     };
     getId_userByRoomId();
   };
@@ -115,7 +127,7 @@ function Chat(props) {
 
   // Hàm này dùng để gửi tin nhắn cho khách hàng
   const handlerSend = () => {
-    console.log(textMessage);
+    // console.log(textMessage);
 
     //Khi gửi tin nhắn thì nó sẽ lấy id của cả 2 người
     //Với cái key category có value là send

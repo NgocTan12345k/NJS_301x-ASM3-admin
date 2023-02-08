@@ -1,8 +1,8 @@
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import ProductAPI from "../API/ProductAPI";
 
 const UpdateProduct = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -12,11 +12,13 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     const getProductDetail = async () => {
-      const res = await axios.get(`http://localhost:3500/api/product/${id}`);
+      const response = await ProductAPI.getDetail(id);
+      setProductDetail(response);
+      // const res = await axios.get(`http://localhost:3500/api/product/${id}`);
 
-      const data = res && res.data ? res.data : {};
+      // const data = res && res.data ? res.data : {};
 
-      setProductDetail(data);
+      // setProductDetail(data);
     };
     getProductDetail();
   }, [id]);
@@ -28,26 +30,37 @@ const UpdateProduct = () => {
   const handleUpdateProduct = (e) => {
     e.preventDefault();
 
-    const updateProduct = () => {
-      fetch(`http://localhost:3500/api/product/update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productDetail),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          if (data) {
-            alert("Update Product successful!");
-            setProductDetail(data);
-          } else {
-            alert("Update Product unsuccessful!");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    const updateProduct = async () => {
+      try {
+        const response = await ProductAPI.updateProduct(id, productDetail);
+        if (response) {
+          alert("Update Product successful!");
+          setProductDetail(response);
+        } else {
+          alert("Update Product unsuccessful!");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      // fetch(`http://localhost:3500/api/product/update/${id}`, {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(productDetail),
+      // })
+      //   .then((res) => {
+      //     return res.json();
+      //   })
+      //   .then((data) => {
+      //     if (data) {
+      //       alert("Update Product successful!");
+      //       setProductDetail(data);
+      //     } else {
+      //       alert("Update Product unsuccessful!");
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     };
     updateProduct();
 

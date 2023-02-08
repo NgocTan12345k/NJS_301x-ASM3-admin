@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import "./Auth.css";
+import AuthAPI from "../API/AuthAPI";
 
 function SignIn(props) {
   const [email, setEmail] = useState("");
@@ -39,43 +40,72 @@ function SignIn(props) {
           return;
         } else {
           setEmailRegex(false);
-          const Signin = () => {
-            fetch("http://localhost:3500/api/auth/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "same-origin",
-              body: JSON.stringify({
+          const Signin = async () => {
+            try {
+              const data = {
                 email: email,
                 password: password,
-              }),
-            })
-              .then((res) => {
-                return res.clone().json();
-              })
-              .then((data) => {
-                console.log("data-->", data);
-                if (data.message === "Login successful") {
-                  if (data.user.role === "client") {
-                    setErrorAuthorized(true);
-                    return;
-                  } else {
-                    localStorage.setItem("id_user", data.user.userId);
-                    localStorage.setItem("name_user", data.user.userName);
-                    localStorage.setItem("role", data.user.role);
-                    setRedirect(true);
-                  }
-                } else if (data.message === "Wrong email") {
-                  setErrorEmail(true);
+              };
+
+              const response = await AuthAPI.postSignIn(data);
+              console.log("res-->", response);
+              if (response.message === "Login successful") {
+                if (response.user.role === "client") {
+                  setErrorAuthorized(true);
                   return;
-                } else if (data.message === "Wrong password") {
-                  setErrorEmail(false);
-                  setErrorPassword(true);
-                  return;
+                } else {
+                  localStorage.setItem("id_user", response.user.userId);
+                  localStorage.setItem("name_user", response.user.userName);
+                  localStorage.setItem("role", response.user.role);
+                  setRedirect(true);
                 }
-              })
-              .catch((e) => {
-                console.log(e);
-              });
+              } else if (response.message === "Wrong email") {
+                setErrorEmail(true);
+                return;
+              } else if (response.message === "Wrong password") {
+                setErrorEmail(false);
+                setErrorPassword(true);
+                return;
+              }
+            } catch (error) {
+              console.log(error);
+            }
+            // fetch("http://localhost:3500/api/auth/login", {
+            //   method: "POST",
+            //   headers: { "Content-Type": "application/json" },
+            //   credentials: "same-origin",
+            //   body: JSON.stringify({
+            //     email: email,
+            //     password: password,
+            //   }),
+            // })
+            //   .then((res) => {
+            //     return res.clone().json();
+            //   })
+            //   .then((data) => {
+            //     console.log("data-->", data);
+            // if (data.message === "Login successful") {
+            //   if (data.user.role === "client") {
+            //     setErrorAuthorized(true);
+            //     return;
+            //   } else {
+            //     localStorage.setItem("id_user", data.user.userId);
+            //     localStorage.setItem("name_user", data.user.userName);
+            //     localStorage.setItem("role", data.user.role);
+            //     setRedirect(true);
+            //   }
+            // } else if (data.message === "Wrong email") {
+            //   setErrorEmail(true);
+            //   return;
+            // } else if (data.message === "Wrong password") {
+            //   setErrorEmail(false);
+            //   setErrorPassword(true);
+            //   return;
+            // }
+            //   })
+            //   .catch((e) => {
+            //     console.log(e);
+            //   });
           };
           Signin();
         }

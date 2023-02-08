@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
-import axios from "axios";
 import convertMoney from "../convertMoney";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
+import UserAPI from "../API/UserAPI";
+import OrderAPI from "../API/OrderAPI";
 Home.propTypes = {};
 
 function Home(props) {
@@ -13,17 +14,25 @@ function Home(props) {
 
   useEffect(() => {
     const getClients = async () => {
-      const res = await axios.get("http://localhost:3500/api/users");
-      const data = res && res.data ? res.data : [];
-      setUsers(data);
+      try {
+        const response = await UserAPI.getAllUser();
+        setUsers(response);
+      } catch (error) {
+        console.log(error);
+      }
+      // const res = await axios.get("http://localhost:3500/api/users");
+      // const data = res && res.data ? res.data : [];
+      // setUsers(data);
     };
 
     const getOrders = async () => {
-      const res = await axios.get(
-        "http://localhost:3500/api/order/getAllOrders"
-      );
-      const data = res && res.data ? res.data : [];
-      setOrders(data);
+      const response = await OrderAPI.getAllOrder();
+      setOrders(response);
+      // const res = await axios.get(
+      //   "http://localhost:3500/api/order/getAllOrders"
+      // );
+      // const data = res && res.data ? res.data : [];
+      // setOrders(data);
     };
     getClients();
     getOrders();

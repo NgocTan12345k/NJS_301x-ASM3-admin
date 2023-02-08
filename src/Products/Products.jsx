@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import convertMoney from "../convertMoney";
 import Header from "../Header/Header";
 import Menu from "../Menu/Menu";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
+import ProductAPI from "../API/ProductAPI";
 
 function Products(props) {
   const [products, setProducts] = useState([]);
@@ -88,12 +88,18 @@ function Products(props) {
   //Và nó phụ thuộc và state pagination
   useEffect(() => {
     const getAllProducts = async () => {
-      const res = await axios.get(
-        "http://localhost:3500/api/product/getAllProducts"
-      );
+      try {
+        const response = await ProductAPI.getAllProduct();
+        setProducts(response);
+      } catch (error) {
+        console.log(error);
+      }
+      // const res = await axios.get(
+      //   "http://localhost:3500/api/product/getAllProducts"
+      // );
 
-      const data = res && res.data ? res.data : [];
-      setProducts(data);
+      // const data = res && res.data ? res.data : [];
+      // setProducts(data);
     };
 
     getAllProducts();
@@ -101,11 +107,12 @@ function Products(props) {
 
   const handleDelete = async (col1) => {
     try {
-      const res = await axios.delete(
-        `http://localhost:3500/api/product/delete/${col1}`
-      );
+      const response = await ProductAPI.deteleProduct(col1);
+      // const res = await axios.delete(
+      //   `http://localhost:3500/api/product/delete/${col1}`
+      // );
       let resuilt = window.confirm("Want to delete Product??");
-      if (resuilt && res.data === "Delete Product successful!") {
+      if (resuilt && response.data === "Delete Product successful!") {
         setProducts(
           products.filter((item) => {
             return item._id !== col1;
