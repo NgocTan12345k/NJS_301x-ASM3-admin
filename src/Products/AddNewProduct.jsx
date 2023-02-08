@@ -43,26 +43,28 @@ const AddNewProduct = () => {
     e.preventDefault();
 
     const postAddProduct = async () => {
-      try {
-        const response = await ProductAPI.postAddProduct(formData);
-        console.log("res-->", response);
-      } catch (error) {
-        console.log(error);
-      }
-      // fetch("http://localhost:3500/api/product/postAddProduct", {
-      //   method: "POST",
-
-      //   body: formData,
-      // })
-      //   .then((res) => {
-      //     return res.clone().json();
-      //   })
-      //   .then((data) => {
-      //     console.log("data-->", data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
+      // try {
+      //   const response = await ProductAPI.postAddProduct(formData);
+      //   console.log("res-->", response);
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      fetch(
+        "https://ecommerce-app-server.onrender.com/api/product/postAddProduct",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+        .then((res) => {
+          return res.clone().json();
+        })
+        .then((data) => {
+          console.log("data-->", data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
     postAddProduct();
     setFormErrors(validate(formValues));
